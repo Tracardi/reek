@@ -78,33 +78,33 @@ if 'folders' in config:
                 for namespace, namespace_config in constrains.items():
 
                     file_module_name = file_path_to_module(file)
-
+                    name = namespace_config.get('name', None)
                     if 'allowed' in namespace_config:
                         allowed = _get_allowed(namespace_config)
                         not_allowed = check_allowed(file, file_module_name, namespace, imports, allowed)
                         if not_allowed:
-                            report[namespace].extend(not_allowed)
+                            report[(namespace, name)].extend(not_allowed)
 
                     if 'disallowed' in namespace_config:
                         disallowed = _get_disallowed(namespace_config)
                         not_allowed = check_disallowed(file, file_module_name, namespace, imports, disallowed)
                         if not_allowed:
-                            report[namespace].extend(not_allowed)
+                            report[(namespace, name)].extend(not_allowed)
 
             folder_progress.update(task, advance=1)
 
 console.print("Report", style="bold")
 total_errors = 0
 failed_namespaces = []
-for namespace, validations in report.items():
+for (namespace, name), validations in report.items():
     if validations:
         validations = list(set(validations))
         no_of = len(validations)
         total_errors += no_of
         failed_namespaces.append(f"{namespace} ({no_of})")
-        console.rule(f"Constrain failed for namespace \"{namespace}\" ({no_of})", style="bold red")
-        console.print(f"List of files that validate the constraints", style="red")
-        console.rule(style="red")
+        console.rule(f"Constrain failed for namespace \"{namespace}\" ({no_of})", style="red")
+        console.print(name if name is not None else "Missing description", style="red")
+        console.rule(f"List of files that break the constraints", style="red")
         print_bullet_list(sorted(validations))
 
 console.rule(f"Summary", style="white")
