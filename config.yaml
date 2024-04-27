@@ -1,0 +1,11 @@
+folders:
+  - /home/risto/PycharmProjects/tracardi
+  - /home/risto/PycharmProjects/tracardi-api
+constrains:
+  tracardi.service.storage.mysql.schema:
+    name: "mysq schema only available in storage"
+    allowed:
+      - tracardi.service.storage.mysql.mapping
+      - tracardi.service.storage.mysql.service
+      - tracardi.worker.service.worker.migration_workers.copy_to_mysql
+      - test.unit.mysql.test_
