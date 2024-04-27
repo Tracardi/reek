@@ -6,15 +6,35 @@ folders:
   - /home/risto/PycharmProjects/tracardi-pro
   - /home/risto/PycharmProjects/ctl
 constrains:
+
   tracardi.service.storage.mysql.schema:
-    name: "Separate mysq schema to be available only in storage mapping and services."
+    name: "Mysql schema should be only used in storage mapping and services."
     allowed:
       - tracardi.service.storage.mysql.mapping
       - tracardi.service.storage.mysql.service
       - test.unit.mysql.test_
       # This binding is incorrect
       - tracardi.worker.service.worker.migration_workers.copy_to_mysql
+
   tracardi.service.storage.driver.elastic:
-    name: "Separate access to elastic to `tracardi.service.storage.elastic.interface` namespace."
+    name: "`tracardi.service.storage.driver.elastic` should be only used in `tracardi.service.storage.elastic.interface` namespace."
     allowed:
       - tracardi.service.storage.elastic.interface
+
+  app:
+    name: "Package app should be never used in other parts of application then app."
+    allowed:
+      - app
+
+  com_tracardi.endpoint:
+    name: "Package com_tracardi.endpoint should be never used in other parts of application then com_tracardi.endpoint."
+    allowed:
+      - com_tracardi.endpoint
+      - app.main  # This is needed for the startup of commercial endpoints
+
+  app.api:
+    name: "Package app.api should be never used in other parts of application then app.api."
+    allowed:
+      - app.api
+      - app.main  # This is needed for the startup of endpoints
+

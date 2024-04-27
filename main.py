@@ -8,26 +8,42 @@ from utils.yaml_reader import read_yaml
 from rich.progress import Progress
 from rich.console import Console
 
+
 def _get_allowed(namespace_config: dict):
     return [c for c in namespace_config.get('allowed', [])]
 
 
-def is_allowed(namespace: str, allowed: List[str]) -> bool:
-    for allowed_namespace in allowed:
+def _get_disallowed(namespace_config: dict):
+    return [c for c in namespace_config.get('disallowed', [])]
+
+
+def is_in_list(namespace: str, items: List[str]) -> bool:
+    for allowed_namespace in items:
         if namespace.startswith(allowed_namespace):
             return True
     return False
 
-def get_not_allowed(file: str, namespace, imports) -> List[str]:
-    allowed = _get_allowed(namespace_config)
+
+def check_allowed(file: str, current_file_module_name: str, namespace, imports, allowed) -> List[str]:
     not_allowed = []
     for _import in imports:
-        # if file.startswith("tracardi/service/storage/mysql/mapping"):
-        #     print("xxx", file)
         if _import.startswith(namespace):
-            module_name = file_path_to_module(file)
-            if not is_allowed(module_name, allowed):
+            if not is_in_list(current_file_module_name, items=allowed):
                 not_allowed.append(file)
+    return not_allowed
+
+
+def check_disallowed(file: str, current_file_module_name: str, namespace, imports, disallowed) -> List[str]:
+    not_allowed = []
+
+    for _disallowed in disallowed:
+        if not current_file_module_name.startswith(_disallowed):
+            continue
+
+        for _import in imports:
+            if _import.startswith(namespace):
+                not_allowed.append(file)
+
     return not_allowed
 
 
@@ -41,6 +57,7 @@ def print_bullet_list(items, bullet="•"):
     """
     for item in items:
         console.print(f"{bullet} {item}")
+
 
 # Example usage:
 file_path = 'config.yaml'
@@ -59,17 +76,39 @@ if 'folders' in config:
             for file, imports in find_reeks(folder):
                 constrains = config['constrains']
                 for namespace, namespace_config in constrains.items():
-                    not_allowed = get_not_allowed(file, namespace, imports)
-                    if not_allowed:
-                        report[namespace].extend(not_allowed)
+
+                    file_module_name = file_path_to_module(file)
+
+                    if 'allowed' in namespace_config:
+                        allowed = _get_allowed(namespace_config)
+                        not_allowed = check_allowed(file, file_module_name, namespace, imports, allowed)
+                        if not_allowed:
+                            report[namespace].extend(not_allowed)
+
+                    if 'disallowed' in namespace_config:
+                        disallowed = _get_disallowed(namespace_config)
+                        not_allowed = check_disallowed(file, file_module_name, namespace, imports, disallowed)
+                        if not_allowed:
+                            report[namespace].extend(not_allowed)
 
             folder_progress.update(task, advance=1)
 
 console.print("Report", style="bold")
+total_errors = 0
+failed_namespaces = []
 for namespace, validations in report.items():
     if validations:
         validations = list(set(validations))
-        console.rule(f"Constrain failed for namespace \"{namespace}\" ({len(validations)})", style="bold red")
+        no_of = len(validations)
+        total_errors += no_of
+        failed_namespaces.append(f"{namespace} ({no_of})")
+        console.rule(f"Constrain failed for namespace \"{namespace}\" ({no_of})", style="bold red")
         console.print(f"List of files that validate the constraints", style="red")
         console.rule(style="red")
         print_bullet_list(sorted(validations))
+
+console.rule(f"Summary", style="white")
+console.print(f"Total numer of errors {total_errors}", style="blue")
+console.print(f"Failed namespaces {len(report)}", style="blue")
+print_bullet_list(sorted(failed_namespaces))
+console.rule(style="white")
