@@ -102,6 +102,7 @@ for (namespace, name), validations in report.items():
         no_of = len(validations)
         total_errors += no_of
         failed_namespaces.append(f"{namespace} ({no_of})")
+        console.rule(f"FAILED CONSTRAIN", style="red")
         console.rule(f"Constrain failed for namespace \"{namespace}\" ({no_of})", style="red")
         console.print(name if name is not None else "Missing description", style="red")
         console.rule(f"List of files that break the constraints", style="red")

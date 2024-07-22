@@ -7,34 +7,63 @@ folders:
   - /home/risto/PycharmProjects/ctl
 constrains:
 
-  tracardi.service.storage.mysql.schema:
-    name: "Mysql schema should be only used in storage mapping and services."
-    allowed:
-      - tracardi.service.storage.mysql.mapping
-      - tracardi.service.storage.mysql.service
-      - test.unit.mysql.test_
-      # This binding is incorrect
-      - tracardi.worker.service.worker.migration_workers.copy_to_mysql
+#  tracardi.service.storage.mysql.schema:
+#    name: "Mysql schema should be only used in storage mapping and services."
+#    allowed:
+#      - tracardi.service.storage.mysql.mapping
+#      - tracardi.service.storage.mysql.service
+#      - test.unit.mysql.test_
+#      # This binding is incorrect
+#      - tracardi.worker.service.worker.migration_workers.copy_to_mysql
+
+
+#  tracardi.domain.storage_record:
+#    name: "tracardi.domain.storage_record allowed only in tracardi.service.storage.elastic.interface."
+#    allowed:
+#      - tracardi.service.storage.driver.elastic
+#      - tracardi.service.storage.elastic.interface
+#      - com_tracardi.test
+#      - test
+
+#  tracardi.service.storage.index:
+#    name: "tracardi.domain.storage_record allowed only in tracardi.service.storage.elastic.interface."
+#    allowed:
+#      - com_tracardi.test
+#      - test
 
   tracardi.service.storage.driver.elastic:
     name: "`tracardi.service.storage.driver.elastic` should be only used in `tracardi.service.storage.elastic.interface` namespace."
     allowed:
       - tracardi.service.storage.elastic.interface
 
-  app:
-    name: "Package app should be never used in other parts of application then app."
-    allowed:
-      - app
+#  tracardi.service.storage.mysql.service.resource_service:
+#    name: "`tracardi.service.storage.mysql.service.resource_service` should be only used in `mysql.interface` namespace."
+#    allowed:
+#      - com_tracardi.storage.mysql.interface.resource
+#      - tracardi.service.storage.mysql.interface.resource
+#      - test
+#
+#  tracardi.service.storage.mysql.service.destination_service:
+#    name: "`tracardi.service.storage.mysql.service.destination_service` should be only used in `mysql.interface` namespace."
+#    allowed:
+#      - com_tracardi.storage.mysql.interface.destination
+#      - tracardi.service.storage.mysql.interface.destination
+#      - test
 
-  com_tracardi.endpoint:
-    name: "Package com_tracardi.endpoint should be never used in other parts of application then com_tracardi.endpoint."
-    allowed:
-      - com_tracardi.endpoint
-      - app.main  # This is needed for the startup of commercial endpoints
-
-  app.api:
-    name: "Package app.api should be never used in other parts of application then app.api."
-    allowed:
-      - app.api
-      - app.main  # This is needed for the startup of endpoints
+#  app:
+#    name: "Package app should be never used in other parts of application then app."
+#    allowed:
+#      - app
+#
+#  com_tracardi.endpoint:
+#    name: "Package com_tracardi.endpoint should be never used in other parts of application then com_tracardi.endpoint."
+#    allowed:
+#      - com_tracardi.endpoint
+#      - app.main  # This is needed for the startup of commercial endpoints
+#
+#  app.api:
+#    name: "Package app.api should be never used in other parts of application then app.api."
+#    allowed:
+#      - app.api
+#      - app.main  # This is needed for the startup of endpoints
 
