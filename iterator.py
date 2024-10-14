@@ -55,6 +55,6 @@ def find_reeks(root_directory: str):
             all_imports[file] = imports
 
     for file, imports in all_imports.items():
-        yield file.replace(root_directory, ""), imports
+        yield file.replace(root_directory, ""), imports, root_directory
 
 

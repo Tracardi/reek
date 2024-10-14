@@ -7,6 +7,13 @@ folders:
   - /home/risto/PycharmProjects/ctl
 constrains:
 
+
+  tracardi.domain.event:
+    allowed:
+      - app
+      - tracardi.service.wf
+      - test.unit
+
 #  tracardi.service.storage.mysql.schema:
 #    name: "Mysql schema should be only used in storage mapping and services."
 #    allowed:
@@ -31,10 +38,40 @@ constrains:
 #      - com_tracardi.test
 #      - test
 
-  tracardi.service.storage.driver.elastic:
-    name: "`tracardi.service.storage.driver.elastic` should be only used in `tracardi.service.storage.elastic.interface` namespace."
-    allowed:
-      - tracardi.service.storage.elastic.interface
+#  tracardi.domain.value_object.bulk_insert_result:
+#    allowed:
+#      - tracardi.service.storage.elastic.dal
+#      - tracardi.service.storage.elastic.driver
+#
+#  tracardi.domain.storage_record:
+#    allowed:
+#      - tracardi.service.storage.elastic.dal
+#      - tracardi.service.storage.elastic.driver
+
+
+
+#  tracardi.service.storage.elastic.dal:
+#    name: "`tracardi.service.storage.elastic.dal` should be only used in `tracardi.service.storage.elastic.interface` namespace."
+#    allowed:
+#      - tracardi.service.storage.elastic.interface
+#      - tracardi.service.storage.elastic.dal
+#      - com_tracardi._temporal
+#
+#  tracardi.service.storage.elastic.driver:
+#    allowed:
+#      - tracardi.service.storage.elastic.driver
+#      - tracardi.service.storage.elastic.dal
+#      - com_tracardi.storage.elastic.dal
+#      - test.unit
+#      - com_tracardi.test.unit
+#      - com_tracardi._temporal
+#
+#
+#  com_tracardi.storage.elastic.dal:
+#    allowed:
+#      - com_tracardi.storage.elastic.dal
+#      - com_tracardi.storage.elastic.interface
+#      - com_tracardi.test.unit
 
 #  tracardi.service.storage.mysql.service.resource_service:
 #    name: "`tracardi.service.storage.mysql.service.resource_service` should be only used in `mysql.interface` namespace."
@@ -49,6 +86,14 @@ constrains:
 #      - com_tracardi.storage.mysql.interface.destination
 #      - tracardi.service.storage.mysql.interface.destination
 #      - test
+
+#  tracardi.service.storage.mysql.service.event_source_service:
+#    name: "`tracardi.service.storage.mysql.service.event_source_service` should be only used in `mysql.interface` namespace."
+#    allowed:
+#      - com_tracardi.storage.mysql.interface.event_source
+#      - tracardi.service.storage.mysql.interface.event_source
+#      - test
+
 
 #  app:
 #    name: "Package app should be never used in other parts of application then app."
